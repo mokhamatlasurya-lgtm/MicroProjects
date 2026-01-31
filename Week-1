@@ -1,0 +1,228 @@
+// *Menu-Driven Program for Circular Linked List Operations in C*
+#include <stdio.h>
+#include <stdlib.h>
+struct Node
+{
+    int data;
+    struct Node *next;
+};
+struct Node *head = NULL;
+void create()
+{
+	struct Node *newnode,*temp=head;
+	newnode=(struct Node*)malloc(sizeof(struct Node));
+	printf("Enter data value: ");
+	scanf("%d",&newnode->data);
+	newnode->next=NULL;
+	if(head==NULL)
+	{
+		head=newnode;
+		newnode->next=head;
+	}
+	else
+	{
+		while(temp->next!=head)
+		{
+			temp=temp->next;
+		}
+		temp->next=newnode;
+		newnode->next=head;
+	}
+}
+void display()
+{
+	struct Node *temp=head;
+	if(head==NULL)
+	{
+		printf("List is empty\n");
+		return;
+	}
+	else
+	{
+		while(temp->next!=head)
+		{
+			printf("%d--> ",temp->data);
+			temp=temp->next;
+		}
+		printf("%d-->(head)",temp->data);
+	}
+}
+void insertAtBegin()
+{
+	struct Node *newnode,*temp=head;
+	newnode=(struct Node*)malloc(sizeof(struct Node));
+	printf("Enter data value: ");
+	scanf("%d",&newnode->data);
+	newnode->next=NULL;
+	if(head==NULL)
+	{
+		head=newnode;
+		newnode->next=head;
+	}
+	else
+	{
+		while(temp->next!=head)
+		{
+			temp=temp->next;
+		}
+		temp->next=newnode;
+		newnode->next=head;
+		head=newnode;
+	}
+}
+void insertAtEnd()
+{
+	struct Node *newnode,*temp=head;
+	newnode=(struct Node*)malloc(sizeof(struct Node));
+	printf("Enter data value: ");
+	scanf("%d",&newnode->data);
+	newnode->next=NULL;
+	if(head==NULL)
+	{
+		head=newnode;
+		newnode->next=head;
+	}
+	else
+	{
+		while(temp->next!=head)
+		{
+			temp=temp->next;
+		}
+		temp->next=newnode;
+		newnode->next=head;
+	}		
+}
+void insertAnyPos()
+{
+    struct Node *newnode, *temp = head;
+    int pos, i = 1;
+    newnode = (struct Node*)malloc(sizeof(struct Node));
+    printf("Enter data value: ");
+    scanf("%d", &newnode->data);
+    printf("Enter position: ");
+    scanf("%d", &pos);
+    if (head == NULL)
+    {
+        head = newnode;
+        newnode->next = head;
+        return;
+    }
+    if (pos == 1)
+    {
+        while (temp->next != head)
+            temp = temp->next;
+        newnode->next = head;
+        temp->next = newnode;
+        head = newnode;
+        return;
+    }
+    temp = head;
+    while (i < pos - 1 && temp->next != head)
+    {
+        temp = temp->next;
+        i++;
+    }
+    newnode->next = temp->next;
+    temp->next = newnode;
+}
+void deleteAtBegin()
+{
+	struct Node *temp=head,*remove=NULL;
+	if(head==NULL)
+	{
+		printf("List is empty\n");
+		return;
+	}
+	else
+	{
+		remove=head;
+		while(temp->next!=head)
+		{
+			temp=temp->next;
+		}
+		temp->next=head->next;
+		head=head->next;
+		free(remove);
+	}	
+}
+void deleteAtEnd()
+{
+	struct Node *temp=head,*pre=NULL;
+	if(head==NULL)
+	{
+		printf("List is empty\n");
+		return;
+	}
+	else
+	{
+		while(temp->next!=head)
+		{
+			pre=temp;
+			temp=temp->next;
+		}
+		pre->next=head;
+		free(temp);
+	}	
+}
+void deleteAnyvalue()
+{
+    struct Node *temp=head,*pre=NULL;
+    int val;
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+    printf("Enter value to delete: ");
+    scanf("%d", &val);
+    if (head->data == val)
+    {
+        deleteAtBegin();
+        return;
+    }
+    pre = head;
+    temp = head->next;
+    while (temp != head)
+    {
+        if (temp->data == val)
+        {
+            pre->next = temp->next;
+            free(temp);
+            printf("Value deleted\n");
+            return;
+        }
+        pre = temp;
+        temp = temp->next;
+    }
+    printf("Value not found\n");
+}
+int main()
+{
+    int ch;
+    while(1)
+    {
+        printf("Circular Linked Lists\n");
+        printf("1.create new list\n2.insert At Begin\n3.insert At End\n4.insert At position\n5.Delete At Begin\n6.Delete At End\n7.Delete Any value\n 8.display List\n9.Exit\n");
+        printf("Enter Choice: ");
+        scanf("%d",&ch);
+        switch (ch)
+        {
+        	int i,n;
+            case 1: 
+                    printf("Enter Number Nodes: ");
+                    scanf("%d",&n);
+                    for(i=1;i<=n;i++)
+                        create();
+                    break;
+            case 2:insertAtBegin();break;
+            case 3:insertAtEnd();break;
+            case 4:insertAnyPos();break;
+            case 5:deleteAtBegin();break;
+            case 6:deleteAtEnd();break;
+            case 7:deleteAnyvalue();break;
+            case 8:display();break;
+            case 9:printf("Exiting...\n");return 0;
+            default:printf("Invalid choice\n");
+        }
+    }
+}
