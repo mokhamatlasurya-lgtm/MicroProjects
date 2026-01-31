@@ -1,228 +1,179 @@
-// *Menu-Driven Program for Circular Linked List Operations in C*
-#include <stdio.h>
-#include <stdlib.h>
-struct Node
+#include<stdio.h>
+#include<stdlib.h>
+#define SIZE 50
+typedef struct
 {
-    int data;
-    struct Node *next;
-};
-struct Node *head = NULL;
-void create()
+    int id;
+    char pName[20];
+    int priority;
+    float BT;
+}Process;
+
+int count = 0;
+/* Add process */
+void Add(Process table[], int n)
 {
-	struct Node *newnode,*temp=head;
-	newnode=(struct Node*)malloc(sizeof(struct Node));
-	printf("Enter data value: ");
-	scanf("%d",&newnode->data);
-	newnode->next=NULL;
-	if(head==NULL)
-	{
-		head=newnode;
-		newnode->next=head;
-	}
-	else
-	{
-		while(temp->next!=head)
-		{
-			temp=temp->next;
-		}
-		temp->next=newnode;
-		newnode->next=head;
-	}
+    printf("Enter process-%d details\n", count+1);
+    printf("Enter PID: ");
+    scanf("%d",&table[count].id);
+    printf("Enter Process Name: ");
+    scanf("%s", table[count].pName);
+    printf("Enter Priority: ");
+    scanf("%d",&table[count].priority);
+    printf("Enter Burst Time: ");
+    scanf("%f",&table[count].BT);
+    count++;
 }
-void display()
+/* Display processes */
+void Display(Process table[], int n)
 {
-	struct Node *temp=head;
-	if(head==NULL)
-	{
-		printf("List is empty\n");
-		return;
-	}
-	else
-	{
-		while(temp->next!=head)
-		{
-			printf("%d--> ",temp->data);
-			temp=temp->next;
-		}
-		printf("%d-->(head)",temp->data);
-	}
-}
-void insertAtBegin()
-{
-	struct Node *newnode,*temp=head;
-	newnode=(struct Node*)malloc(sizeof(struct Node));
-	printf("Enter data value: ");
-	scanf("%d",&newnode->data);
-	newnode->next=NULL;
-	if(head==NULL)
-	{
-		head=newnode;
-		newnode->next=head;
-	}
-	else
-	{
-		while(temp->next!=head)
-		{
-			temp=temp->next;
-		}
-		temp->next=newnode;
-		newnode->next=head;
-		head=newnode;
-	}
-}
-void insertAtEnd()
-{
-	struct Node *newnode,*temp=head;
-	newnode=(struct Node*)malloc(sizeof(struct Node));
-	printf("Enter data value: ");
-	scanf("%d",&newnode->data);
-	newnode->next=NULL;
-	if(head==NULL)
-	{
-		head=newnode;
-		newnode->next=head;
-	}
-	else
-	{
-		while(temp->next!=head)
-		{
-			temp=temp->next;
-		}
-		temp->next=newnode;
-		newnode->next=head;
-	}		
-}
-void insertAnyPos()
-{
-    struct Node *newnode, *temp = head;
-    int pos, i = 1;
-    newnode = (struct Node*)malloc(sizeof(struct Node));
-    printf("Enter data value: ");
-    scanf("%d", &newnode->data);
-    printf("Enter position: ");
-    scanf("%d", &pos);
-    if (head == NULL)
+    int i;
+    for(i=0;i<count;i++)
     {
-        head = newnode;
-        newnode->next = head;
-        return;
+        printf("\nPID=%d\tName=%s\tPriority=%d\tBT=%.2f",
+               table[i].id, table[i].pName,
+               table[i].priority, table[i].BT);
     }
-    if (pos == 1)
-    {
-        while (temp->next != head)
-            temp = temp->next;
-        newnode->next = head;
-        temp->next = newnode;
-        head = newnode;
-        return;
-    }
-    temp = head;
-    while (i < pos - 1 && temp->next != head)
-    {
-        temp = temp->next;
-        i++;
-    }
-    newnode->next = temp->next;
-    temp->next = newnode;
+    printf("\n");
 }
-void deleteAtBegin()
+
+/* Bubble sort by Priority */
+void BubbleSortByPriority(Process table[], int n)
 {
-	struct Node *temp=head,*remove=NULL;
-	if(head==NULL)
-	{
-		printf("List is empty\n");
-		return;
-	}
-	else
-	{
-		remove=head;
-		while(temp->next!=head)
-		{
-			temp=temp->next;
-		}
-		temp->next=head->next;
-		head=head->next;
-		free(remove);
-	}	
-}
-void deleteAtEnd()
-{
-	struct Node *temp=head,*pre=NULL;
-	if(head==NULL)
-	{
-		printf("List is empty\n");
-		return;
-	}
-	else
-	{
-		while(temp->next!=head)
-		{
-			pre=temp;
-			temp=temp->next;
-		}
-		pre->next=head;
-		free(temp);
-	}	
-}
-void deleteAnyvalue()
-{
-    struct Node *temp=head,*pre=NULL;
-    int val;
-    if (head == NULL)
+    int i,j,comp=0,swap=0;
+    Process temp;
+    for(i=0;i<count;i++)
     {
-        printf("List is empty\n");
-        return;
-    }
-    printf("Enter value to delete: ");
-    scanf("%d", &val);
-    if (head->data == val)
-    {
-        deleteAtBegin();
-        return;
-    }
-    pre = head;
-    temp = head->next;
-    while (temp != head)
-    {
-        if (temp->data == val)
+        for(j=0;j<count-i-1;j++)
         {
-            pre->next = temp->next;
-            free(temp);
-            printf("Value deleted\n");
+            comp++;
+            if(table[j].priority > table[j+1].priority)
+            {
+                temp = table[j];
+                table[j] = table[j+1];
+                table[j+1] = temp;
+                swap++;
+            }
+        }
+    }
+    printf("\nBubble Sort by Priority Done");
+    printf("\nComparisons = %d", comp);
+    printf("\nSwaps = %d\n", swap);
+}
+/* Insertion sort by PID */
+void InsertionSortByPid(Process table[], int n)
+{
+    int i,j,comp=0,swap=0;
+    Process key;
+    for(i=1;i<count;i++)
+    {
+        key = table[i];
+        j = i-1;
+        while(j>=0 && (++comp && table[j].id > key.id))
+        {
+            table[j+1] = table[j];
+            j--;
+            swap++;
+        }
+        table[j+1] = key;
+    }
+    printf("\nInsertion Sort by PID Done");
+    printf("\nComparisons = %d", comp);
+    printf("\nShifts = %d\n", swap);
+}
+/* Shell sort by Burst Time */
+void shellSortByBT(Process table[], int n)
+{
+    int gap,i,j,comp=0,swap=0;
+    Process temp;
+    for(gap = count/2; gap > 0; gap /= 2)
+    {
+        for(i = gap; i < count; i++)
+        {
+            temp = table[i];
+            j=i;
+            while(j >= gap && (++comp && table[j-gap].BT > temp.BT))
+            {
+                table[j] = table[j-gap];
+                swap++;
+                j = j - gap; 
+            }
+            table[j] = temp;
+        }
+    }
+    printf("\nShell Sort by Burst Time Done");
+    printf("\nComparisons = %d", comp);
+    printf("\nShifts = %d\n", swap);
+}
+
+/* Linear search by PID */
+void linearSearchByPid(Process table[], int n)
+{
+    int key,i,comp=0;
+    printf("Enter PID to search: ");
+    scanf("%d",&key);
+    for(i=0;i<count;i++)
+    {
+        comp++;
+        if(table[i].id == key)
+        {
+            printf("Process Found at position %d", i+1);
+            printf("\nComparisons = %d\n", comp);
             return;
         }
-        pre = temp;
-        temp = temp->next;
     }
-    printf("Value not found\n");
+    printf("Process Not Found");
+    printf("\nComparisons = %d\n", comp);
 }
+/* Binary search by PID (sorted list required) */
+void BinarySearchByPid(Process table[], int n)
+{
+    int key,low=0,high=count-1,mid,comp=0;
+    printf("Enter PID to search: ");
+    scanf("%d",&key);
+    while(low <= high)
+    {
+        comp++;
+        mid = (low + high)/2;
+        if(table[mid].id == key)
+        {
+            printf("Process Found at position %d", mid+1);
+            printf("\nComparisons = %d\n", comp);
+            return;
+        }
+        else if(table[mid].id < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    printf("Process Not Found");
+    printf("\nComparisons = %d\n", comp);
+}
+/* Main */
 int main()
 {
-    int ch;
+    Process table[SIZE];
+    int choice;
     while(1)
     {
-        printf("Circular Linked Lists\n");
-        printf("1.create new list\n2.insert At Begin\n3.insert At End\n4.insert At position\n5.Delete At Begin\n6.Delete At End\n7.Delete Any value\n 8.display List\n9.Exit\n");
-        printf("Enter Choice: ");
-        scanf("%d",&ch);
-        switch (ch)
+        printf("\n1.Add\n2.Display\n3.BubbleSortByPriority");
+        printf("\n4.InsertionSortByPid\n5.ShellSortByBT");
+        printf("\n6.LinearSearchByPid\n7.BinarySearchByPid\n8.Exit\n");
+        printf("Enter choice: ");
+        scanf("%d",&choice);
+        switch(choice)
         {
-        	int i,n;
-            case 1: 
-                    printf("Enter Number Nodes: ");
-                    scanf("%d",&n);
-                    for(i=1;i<=n;i++)
-                        create();
-                    break;
-            case 2:insertAtBegin();break;
-            case 3:insertAtEnd();break;
-            case 4:insertAnyPos();break;
-            case 5:deleteAtBegin();break;
-            case 6:deleteAtEnd();break;
-            case 7:deleteAnyvalue();break;
-            case 8:display();break;
-            case 9:printf("Exiting...\n");return 0;
-            default:printf("Invalid choice\n");
+            case 1: Add(table,SIZE); break;
+            case 2: Display(table,SIZE); break;
+            case 3: BubbleSortByPriority(table,SIZE); break;
+            case 4: InsertionSortByPid(table,SIZE); break;
+            case 5: shellSortByBT(table,SIZE); break;
+            case 6: linearSearchByPid(table,SIZE); break;
+            case 7:
+                printf("Note: Data must be sorted by PID before Binary Search\n");
+                BinarySearchByPid(table,SIZE);
+                break;
+            case 8: return 0;
         }
     }
 }
